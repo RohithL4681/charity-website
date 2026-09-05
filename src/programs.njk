@@ -1,0 +1,27 @@
+---
+layout: page.njk
+title: Our programs
+subtitle: The initiatives your donations bring to life. Each program is run with local partners and reported on publicly.
+---
+
+<div class="grid grid-3">
+  {% for program in collections.programs %}
+  <article class="card">
+    {% if program.data.image %}
+    <img class="card-image" src="{{ program.data.image }}" alt="{{ program.data.title }}" loading="lazy">
+    {% endif %}
+    <div class="card-body">
+      <span class="card-tag">{{ program.data.tag }}</span>
+      <h3>{{ program.data.title }}</h3>
+      <p>{{ program.data.excerpt }}</p>
+      <a class="card-link" href="{{ program.url }}">Learn more →</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+<section class="section center" style="padding-bottom:0;">
+  <h2>Want to support a program directly?</h2>
+  <p class="muted" style="max-width:560px; margin:0 auto 1.5rem;">Choose a program when you donate, or get in touch and we will direct your gift where it is needed most.</p>
+  <a class="btn btn-primary btn-lg" href="/donate/">Donate now</a>
+</section>

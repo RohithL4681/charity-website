@@ -1,0 +1,67 @@
+---
+layout: page.njk
+title: Thank you
+subtitle: Thank you for your generosity and support.
+---
+
+<div id="thank-you-content">
+  <div class="banner success" style="justify-content:center;">
+    <span>✅</span>
+    <span id="thanks-message">Your donation has been received. A receipt is on its way to your inbox.</span>
+  </div>
+
+  <div class="receipt-box" id="receipt-box" hidden>
+    <h2 style="font-size:1.1rem;">Your donation acknowledgement</h2>
+    <table class="receipt-table">
+      <tr><th>Payment ID</th><td id="receipt-payment"></td></tr>
+      <tr><th>Order ID</th><td id="receipt-order"></td></tr>
+      <tr><th>Amount</th><td id="receipt-amount"></td></tr>
+      <tr><th>Status</th><td id="receipt-status"></td></tr>
+    </table>
+    <p class="muted" style="font-size:0.85rem;">Please save this information to reference your donation. Razorpay has also emailed you a receipt.</p>
+  </div>
+</div>
+
+<div class="center">
+  <h2>What happens next</h2>
+  <p class="muted" style="max-width:620px; margin:0 auto 1.5rem;">
+    Your gift goes to work immediately. We publish impact updates on the
+    <a href="/news/">news page</a> so you can see exactly how your support is making a difference.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="/news/">Read the latest</a>
+    <a class="btn btn-outline" href="/">Back to home</a>
+  </div>
+</div>
+
+<div class="donate-features" style="margin-top:2.5rem;">
+  <div class="donate-feature"><div class="icon">🧾</div><h3>Receipt</h3><p>Razorpay emails a receipt immediately after payment.</p></div>
+  <div class="donate-feature"><div class="icon">📄</div><h3>Tax exemption</h3><p>Donations are eligible for tax exemptions. Email us for your certificate.</p></div>
+  <div class="donate-feature"><div class="icon">🔁</div><h3>Want to give more?</h3><p><a href="/donate/">Make another donation</a> any time.</p></div>
+</div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var paymentId = params.get('payment_id');
+  var orderId = params.get('order_id');
+  var amount = params.get('amount');
+  var verified = params.get('verified');
+
+  var box = document.getElementById('receipt-box');
+  var message = document.getElementById('thanks-message');
+  if (!box || !message) return;
+
+  if (paymentId || orderId) {
+    box.hidden = false;
+    document.getElementById('receipt-payment').textContent = paymentId || '—';
+    document.getElementById('receipt-order').textContent = orderId || '—';
+    document.getElementById('receipt-amount').textContent = amount ? '₹' + amount : '—';
+    document.getElementById('receipt-status').textContent =
+      verified === 'yes' ? 'Verified ✓' : 'Received (pending verification)';
+    message.textContent = verified === 'yes'
+      ? 'Your donation has been received and verified. A receipt is on its way to your inbox.'
+      : 'Your payment was received. If you reached this page after a completed payment, your contribution will be confirmed shortly.';
+  }
+})();
+</script>

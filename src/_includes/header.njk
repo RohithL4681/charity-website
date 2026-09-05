@@ -1,0 +1,26 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="{{ site.site.name }} - Home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 2l9.5 4.5v6.35c0 4.94-3.9 8.86-9.5 10.65-5.6-1.79-9.5-5.71-9.5-10.65V6.5L12 2zm-.75 4.75v4.5h-4.5v1.5h4.5v4.5h1.5v-4.5h4.5v-1.5h-4.5v-4.5h-1.5z"/></svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">{{ site.site.name }}</span>
+        <span class="brand-tagline">{{ site.site.tagline }}</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        {% for item in site.nav %}
+        <li><a href="{{ item.url }}" class="{% if page.url == item.url %}active{% endif %}">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+      <a class="btn btn-primary btn-donate" href="/donate/">Donate</a>
+    </nav>
+  </div>
+</header>

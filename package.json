@@ -1,0 +1,15 @@
+{
+  "name": "charity-website",
+  "version": "1.0.0",
+  "description": "A lightweight, responsive charity website built with Eleventy. No database, no backend - content managed via files, static hosting.",
+  "private": true,
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "dev": "eleventy --serve",
+    "deploy": "eleventy && echo \"Site built in _site/ - upload this folder to your host.\""
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

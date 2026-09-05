@@ -1,0 +1,5 @@
+{
+  "eleventyComputed": {
+    "permalink": "/programs/{{ title | slug }}/"
+  }
+}

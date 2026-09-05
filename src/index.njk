@@ -1,0 +1,109 @@
+---
+layout: base.njk
+title: Home
+pageDescription: BrightHope Foundation - a non-profit charity supporting education, healthcare and nutrition for underserved communities. Donate securely with Razorpay.
+---
+
+<section class="hero">
+  <div class="hero-bg" role="img" aria-label="Children of the BrightHope community smiling together"></div>
+  <div class="container hero-inner">
+    <span class="hero-badge">Registered non-profit</span>
+    <h1>{{ site.hero.title }}</h1>
+    <p>{{ site.hero.subtitle }}</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary btn-lg" href="/donate/">Donate now</a>
+      <a class="btn btn-light btn-lg" href="/about/">Learn more</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats-band">
+  <div class="container">
+    <div class="stats-grid">
+      {% for stat in site.stats %}
+      <div class="stat">
+        <div class="stat-value">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="section-head" style="text-align:left; margin-bottom:1rem;">
+        <h2 style="margin-bottom:0.4rem;">Our mission</h2>
+        <p style="margin:0;">Building a brighter, fairer future for every family.</p>
+      </span>
+      <p>{{ site.site.description }}</p>
+      <ul>
+        <li><strong>Education for all</strong> – Scholarships, school supplies and after-school support.</li>
+        <li><strong>Healthcare access</strong> – Health camps, medicines and check-ups for vulnerable families.</li>
+        <li><strong>Nutrition programs</strong> – Daily meal kits for children and elderly in need.</li>
+        <li><strong>Livelihood support</strong> – Skill training to help families become self-reliant.</li>
+      </ul>
+      <p><a class="btn btn-primary" href="/about/">Read our story</a></p>
+    </div>
+    <img src="/images/community.jpg" alt="Volunteers distributing meal kits to families">
+  </div>
+</section>
+
+<section class="section" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Our programs</h2>
+      <p>A closer look at the initiatives your donations make possible.</p>
+    </div>
+    <div class="grid grid-3">
+      {% for program in collections.programs | limit(3) %}
+      <article class="card">
+        {% if program.data.image %}
+        <img class="card-image" src="{{ program.data.image }}" alt="{{ program.data.title }}" loading="lazy">
+        {% endif %}
+        <div class="card-body">
+          <span class="card-tag">{{ program.data.tag }}</span>
+          <h3>{{ program.data.title }}</h3>
+          <p>{{ program.data.excerpt }}</p>
+          <a class="card-link" href="{{ program.url }}">Learn more →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="center" style="margin-top:2rem;"><a class="btn btn-outline" href="/programs/">View all programs</a></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Latest news</h2>
+      <p>Updates, stories and impact reports from our work.</p>
+    </div>
+    <div class="grid grid-2">
+      {% for post in collections.posts | limit(3) %}
+      <article class="card">
+        <div class="card-body">
+          <p class="post-meta">{{ post.date | readableDate }}</p>
+          <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+          <p>{{ post.data.excerpt }}</p>
+          <a class="card-link" href="{{ post.url }}">Read more →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="center" style="margin-top:2rem;"><a class="btn btn-outline" href="/news/">All news</a></p>
+  </div>
+</section>
+
+<section class="section donate-cta" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color:#fff; text-align:center;">
+  <div class="container">
+    <h2 style="color:#fff;">Your support changes everything</h2>
+    <p style="max-width:560px; margin:0 auto 1.75rem; opacity:0.95;">Every rupee goes directly to our programs. Donations are processed securely by Razorpay and you receive an instant acknowledgement.</p>
+    <div class="hero-actions">
+      <a class="btn btn-lg" style="background:#fff; color:var(--primary-darker);" href="/donate/">Donate now</a>
+      <a class="btn btn-lg btn-outline" style="color:#fff; border-color:#fff;" href="/contact/">Contact us</a>
+    </div>
+  </div>
+</section>

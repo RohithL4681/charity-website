@@ -1,0 +1,73 @@
+{
+  "site": {
+    "name": "BrightHope Foundation",
+    "tagline": "Empowering communities, one life at a time",
+    "description": "BrightHope Foundation is a non-profit charity working to uplift underserved communities through education, healthcare, nutrition and livelihood programs.",
+    "url": "https://brighthope.org",
+    "language": "en"
+  },
+  "nav": [
+    { "label": "Home", "url": "/" },
+    { "label": "About", "url": "/about/" },
+    { "label": "Programs", "url": "/programs/" },
+    { "label": "Gallery", "url": "/gallery/" },
+    { "label": "News", "url": "/news/" },
+    { "label": "Contact", "url": "/contact/" }
+  ],
+  "theme": {
+    "primary": "#F97316",
+    "primaryDark": "#EA580C",
+    "primaryLight": "#FFF3E8",
+    "background": "#FFF7ED",
+    "surface": "#FFFFFF",
+    "text": "#1C1917",
+    "muted": "#78716C"
+  },
+  "hero": {
+    "image": "/images/hero.jpg",
+    "title": "Together, we can bring real change",
+    "subtitle": "Support BrightHope Foundation and help us provide education, healthcare and hope to thousands of families who need it most."
+  },
+  "stats": [
+    { "value": "5000+", "label": "Lives impacted" },
+    { "value": "12", "label": "Current programs" },
+    { "value": "1500", "label": "Children in school" },
+    { "value": "35000+", "label": "Meals served" }
+  ],
+"donate": {
+    "heading": "Make a donation",
+    "description": "Every contribution, big or small, directly funds our programs. Choose an amount below — payment happens securely inside this page via Razorpay.",
+    "currency": "₹",
+    "min": 10,
+    "max": 100000,
+    "amounts": [
+      { "amount": 100, "label": "Provides a meal kit for a family for a week" },
+      { "amount": 250, "label": "Furnishes school supplies for one child for a term" },
+      { "amount": 500, "label": "Funds a medical check-up camp session" },
+      { "amount": 1000, "label": "Supports one child's education for a month" }
+    ],
+    "custom": {
+      "label": "Or enter a custom amount"
+    },
+    "note": "Payments are processed securely by Razorpay inside this page. After payment you receive an acknowledgement receipt immediately and by email."
+  },
+  "contact": {
+    "email": "hello@brighthope.org",
+    "phone": "+91 98765 43210",
+    "address": "House No. 12, Green Park Colony, New Delhi 110016, India",
+    "hours": "Mon–Sat, 9:00 AM – 6:00 PM"
+  },
+  "footer": {
+    "about": "BrightHope Foundation is a registered non-profit dedicated to building a brighter future for underserved communities.",
+    "social": {
+      "facebook": "https://facebook.com/brighthope",
+      "instagram": "https://instagram.com/brighthope",
+      "twitter": "https://twitter.com/brighthope",
+      "youtube": "https://youtube.com/@brighthope"
+    }
+  },
+  "admin": {
+    "passwordHash": "4d8b2cef9077997a7bc962da24792468058a831991a78c22f7bc715ec39c8d0f",
+    "hint": "Default password is charity@2026. Change it by running: node tools/hash.js <your-new-password> and paste the result here."
+  }
+}

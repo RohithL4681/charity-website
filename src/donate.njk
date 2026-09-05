@@ -1,0 +1,61 @@
+---
+layout: page.njk
+title: Donate
+subtitle: Choose an amount and pay securely. You will receive an acknowledgement receipt for every donation.
+---
+
+<div class="donate-hero">
+  <div class="banner info" style="text-align:left;"><span>💚</span><span>{{ site.donate.note }}</span></div>
+  <h2 style="margin-bottom:0.5rem;">{{ site.donate.heading }}</h2>
+  <p class="muted" style="max-width:620px; margin:0 auto 2rem;">{{ site.donate.description }}</p>
+</div>
+
+<div id="donate-app">
+  <div class="amount-grid" role="radiogroup" aria-label="Choose a donation amount">
+    {% for item in site.donate.amounts %}
+    <div class="amount-card">
+      <button type="button" class="amount-option" role="radio" aria-checked="{{ 'true' if loop.first else 'false' }}" data-amount="{{ item.amount }}">
+        <span class="amount-price">{{ site.donate.currency }}{{ item.amount }}</span>
+        <span class="amount-desc">{{ item.label }}</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="amount-card custom" style="margin-top:1rem;">
+    <div class="custom-inner">
+      <span class="amount-price" style="font-size:1.25rem;">{{ site.donate.custom.label }}</span>
+      <label for="custom-amount" class="sr-only">Custom amount in rupees</label>
+      <div class="custom-input-wrap">
+        <span class="currency-symbol">₹</span>
+        <input type="number" id="custom-amount" min="{{ site.donate.min }}" max="{{ site.donate.max }}" step="1" placeholder="Enter amount" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <div class="center" style="margin-top:1.5rem;">
+    <button type="button" class="btn btn-primary btn-lg" id="donate-now-btn">Donate now</button>
+  </div>
+  <p class="center muted" id="donate-status" role="status" aria-live="polite" style="min-height:1.4rem; margin-top:0.75rem;"></p>
+</div>
+
+<div class="donate-features">
+  <div class="donate-feature">
+    <div class="icon">🔒</div>
+    <h3>Secure payment</h3>
+    <p>Payments are processed by Razorpay, a PCI-DSS compliant payment gateway.</p>
+  </div>
+  <div class="donate-feature">
+    <div class="icon">🧾</div>
+    <h3>Instant acknowledgement</h3>
+    <p>After a successful payment you get a receipt immediately and by email.</p>
+  </div>
+  <div class="donate-feature">
+    <div class="icon">💬</div>
+    <h3>Questions?</h3>
+    <p>Contact us anytime at <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>.</p>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+<script src="/assets/js/donate.js" defer></script>

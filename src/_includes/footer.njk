@@ -1,0 +1,38 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <span class="brand-name">{{ site.site.name }}</span>
+      <p>{{ site.footer.about }}</p>
+      <div class="footer-social">
+        {% for name, url in site.footer.social %}
+        <a href="{{ url }}" target="_blank" rel="noopener" aria-label="{{ name }}">{{ name | capitalize }}</a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h3>Explore</h3>
+      <ul>
+        {% for item in site.nav %}
+        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+        {% endfor %}
+        <li><a href="/donate/">Donate</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contact">
+      <h3>Get in touch</h3>
+      <ul>
+        <li><a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a></li>
+        <li><a href="tel:{{ site.contact.phone | replace(' ', '') }}">{{ site.contact.phone }}</a></li>
+        <li>{{ site.contact.address }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© {{ "" | currentYear }} {{ site.site.name }}. Registered non-profit. All rights reserved.</p>
+      <p>Secure donations powered by <a href="https://razorpay.com" target="_blank" rel="noopener">Razorpay</a>.</p>
+    </div>
+  </div>
+</footer>

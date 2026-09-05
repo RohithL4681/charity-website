@@ -1,0 +1,24 @@
+---
+layout: page.njk
+title: Gallery
+subtitle: Moments from our community programs and events.
+---
+
+<div class="banner info"><span>💡</span><span>Click any photo to view it full-size.</span></div>
+
+<div class="gallery-grid">
+  {% for image in gallery %}
+  <figure class="gallery-item" data-lightbox="{{ image.src }}">
+    <img src="{{ image.src }}" alt="{{ image.caption }}" loading="lazy">
+    <figcaption>{{ image.caption }}</figcaption>
+  </figure>
+  {% endfor %}
+</div>
+
+<figure class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <div>
+    <img src="" alt="">
+    <figcaption></figcaption>
+  </div>
+</figure>
