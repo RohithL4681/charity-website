@@ -1,13 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-
-// Add captions for your images here, or leave them out and the filename is used.
 const captions = {
-  'meal-drive.jpg': 'Meal kit distribution at Green Park colony',
+  'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
   'classroom.jpg': 'After-school study session at our learning centre',
-  'health-camp.jpg': 'Free medical check-up camp for senior citizens',
-  'sankalp.jpg': 'Graduation ceremony of our livelihood training batch',
   'diwali.jpg': 'Diwali celebration with children from our programs',
+  'health-camp.jpg': 'Free medical check-up camp for senior citizens',
+  'meal-drive.jpg': 'Meal kit distribution at Green Park colony',
+  'sankalp.jpg': 'Graduation ceremony of our livelihood training batch',
   'sports.jpg': 'Annual sports day for sponsored children',
 };
 
