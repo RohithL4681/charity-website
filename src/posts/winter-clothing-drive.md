@@ -1,6 +1,6 @@
 ---
 layout: post.njk
-title: Winter clothing drive reaches 400 families
+title: Winter clothing drive reaches 500 families
 date: 2026-12-20
 excerpt: Thanks to your support, we distributed warm clothes and blankets to 400 families before the coldest week of the winter.
 ---
