@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const captions = {
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
   'hash-tag-screen.jpg': 'Digital summit',
@@ -9,6 +12,7 @@ const captions = {
 module.exports = function () {
   const galleryDir = path.join(__dirname, '..', 'images', 'gallery');
   const files = fs.existsSync(galleryDir) ? fs.readdirSync(galleryDir) : [];
+
   return files
     .filter(function (file) {
       return /\.(jpe?g|png|gif|webp|svg)$/i.test(file);
@@ -16,7 +20,9 @@ module.exports = function () {
     .map(function (file) {
       return {
         src: '/images/gallery/' + file,
-        caption: captions[file] || file.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '),
+        caption:
+          captions[file] ||
+          file.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '),
       };
     })
     .sort(function (a, b) {
