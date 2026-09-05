@@ -1,6 +1,5 @@
 const captions = {
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
-  'sports.jpg': 'Annual sports day for sponsored children',
 };
 
 module.exports = function () {
