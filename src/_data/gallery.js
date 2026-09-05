@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const captions = {
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
   'images-2.jpg': 'Plant a tree',
