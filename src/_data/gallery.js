@@ -1,5 +1,5 @@
 const captions = {
-  'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself Hii',
+  'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
   'hash-tag-screen.jpg': 'Digital summit',
   'images-2.jpg': 'Plant a tree',
   'images-3.jpg': 'Happy weekend',
