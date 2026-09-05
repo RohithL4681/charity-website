@@ -7,7 +7,7 @@ pageDescription: Content management area for BrightHope Foundation.
 <header class="page-hero">
   <div class="container">
     <h1>Content manager</h1>
-    <p>Sign in to generate posts and manage your website content.</p>
+    <p>Add, edit and delete news posts, programs and gallery images. Changes go live automatically.</p>
   </div>
 </header>
 
@@ -16,76 +16,126 @@ pageDescription: Content management area for BrightHope Foundation.
     <div class="login-card" id="login-card">
       <span style="font-size:2.2rem;">🔐</span>
       <h2 style="margin:0.5rem 0;">Admin sign in</h2>
-      <p class="muted" style="font-size:0.9rem;">Enter the admin password to continue.</p>
+      <p class="muted" style="font-size:0.9rem;">Enter the admin password to manage the site.</p>
       <input type="password" id="admin-password" placeholder="Admin password" autocomplete="current-password">
       <button class="btn btn-primary" id="admin-login-btn" type="button">Sign in</button>
       <p class="login-error" id="login-error" aria-live="polite"></p>
     </div>
 
     <div class="admin-panel" id="admin-panel" hidden>
-      <div class="banner success"><span>✅</span><span>You are signed in. Use the tools below, then rebuild and redeploy your site to publish changes.</span></div>
+      <div class="banner success" id="admin-welcome" hidden><span>✅</span><span>Signed in. Changes you save are committed to the repository and the site rebuilds automatically.</span></div>
 
-      <div class="admin-section">
-        <h3>📝 Add a news post</h3>
-        <p class="muted" style="font-size:0.9rem;">Fill in the fields, click <strong>Generate</strong>, then copy the preview below into a new file in <code>src/posts/</code>. Name it like <code>my-post-title.md</code> (lowercase, dashes). Then run <code>npm run deploy</code>.</p>
-        <div class="form-field">
-          <label for="post-title">Post title</label>
-          <input type="text" id="post-title" placeholder="e.g. Winter clothing drive a huge success">
-        </div>
-        <div class="form-field">
-          <label for="post-excerpt">Short excerpt (shown on news cards)</label>
-          <input type="text" id="post-excerpt" placeholder="One or two sentences...">
-        </div>
-        <div class="form-field">
-          <label for="post-body">Body — write in Markdown (start each paragraph with a blank line)</label>
-          <textarea id="post-body" rows="8" placeholder="Write your post content here in Markdown..."></textarea>
-        </div>
-        <button class="btn btn-primary" id="post-generate-btn" type="button">Generate post Markdown</button>
-        <button class="btn btn-outline" id="post-copy-btn" type="button">Copy to clipboard</button>
-        <pre id="post-output" style="margin-top:1rem;" hidden></pre>
+      <div class="admin-tabs" role="tablist">
+        <button class="tab-btn active" type="button" role="tab" aria-selected="true" data-tab="news">News posts</button>
+        <button class="tab-btn" type="button" role="tab" aria-selected="false" data-tab="programs">Programs</button>
+        <button class="tab-btn" type="button" role="tab" aria-selected="false" data-tab="gallery">Gallery</button>
       </div>
 
-      <div class="admin-section">
-        <h3>🚀 Add a program</h3>
-        <p class="muted" style="font-size:0.9rem;">Programs live in <code>src/_programs/</code>. Generate below, save as <code>program-name.md</code>, then rebuild.</p>
-        <div class="form-field">
-          <label for="prog-title">Program title</label>
-          <input type="text" id="prog-title" placeholder="e.g. Midday meals">
+      <div class="admin-section" role="tabpanel" id="tab-news">
+        <div class="tab-head">
+          <h3>📝 News posts</h3>
+          <button class="btn btn-primary" type="button" id="post-new-btn">+ New post</button>
         </div>
-        <div class="form-field">
-          <label for="prog-tag">Short tag</label>
-          <input type="text" id="prog-tag" placeholder="e.g. Nutrition">
+        <div id="post-list" class="admin-list"></div>
+
+        <div id="post-editor" hidden>
+          <hr>
+          <h4 id="post-editor-title">New post</h4>
+          <div class="form-field">
+            <label for="post-title">Title *</label>
+            <input type="text" id="post-title" placeholder="e.g. Winter clothing drive a huge success">
+          </div>
+          <div class="form-field">
+            <label for="post-date">Date</label>
+            <input type="date" id="post-date">
+          </div>
+          <div class="form-field">
+            <label for="post-excerpt">Short excerpt (shown on news cards)</label>
+            <input type="text" id="post-excerpt" placeholder="One or two sentences...">
+          </div>
+          <div class="form-field">
+            <label for="post-body">Body (Markdown)</label>
+            <textarea id="post-body" rows="10" placeholder="Write your post content in Markdown..."></textarea>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-primary" type="button" id="post-save-btn">Save post</button>
+            <button class="btn btn-outline" type="button" id="post-cancel-btn">Cancel</button>
+            <button class="btn btn-danger" type="button" id="post-delete-btn" hidden>Delete</button>
+          </div>
         </div>
-        <div class="form-field">
-          <label for="prog-excerpt">Short description</label>
-          <textarea id="prog-excerpt" rows="3" placeholder="A few sentences for the program card..."></textarea>
-        </div>
-        <div class="form-field">
-          <label for="prog-balance">Body — what this program does</label>
-          <textarea id="prog-body" rows="6" placeholder="Full details in Markdown..."></textarea>
-        </div>
-        <button class="btn btn-primary" id="prog-generate-btn" type="button">Generate program Markdown</button>
-        <button class="btn btn-outline" id="prog-copy-btn" type="button">Copy to clipboard</button>
-        <pre id="prog-output" style="margin-top:1rem;" hidden></pre>
       </div>
 
-      <div class="admin-section">
-        <h3>🖼️ Images</h3>
-        <ul style="font-size:0.95rem;">
-          <li><strong>Gallery:</strong> drop any image into <code>src/images/gallery/</code> (jpg/png/webp). It appears on the gallery page automatically. Add a caption in <code>src/_data/gallery.js</code>.</li>
-          <li><strong>Hero:</strong> replace <code>src/images/hero.jpg</code> with your own photo (keep the same name).</li>
-          <li><strong>Home / About:</strong> replace <code>src/images/community.jpg</code>.</li>
-          <li><strong>Programs:</strong> set <code>image:</code> in <code>src/_programs/*.md</code> to any path under <code>/images/</code>.</li>
-        </ul>
+      <div class="admin-section" role="tabpanel" id="tab-programs" hidden>
+        <div class="tab-head">
+          <h3>🚀 Programs</h3>
+          <button class="btn btn-primary" type="button" id="program-new-btn">+ New program</button>
+        </div>
+        <div id="program-list" class="admin-list"></div>
+
+        <div id="program-editor" hidden>
+          <hr>
+          <h4 id="program-editor-title">New program</h4>
+          <div class="form-field">
+            <label for="program-title">Title *</label>
+            <input type="text" id="program-title" placeholder="e.g. Midday meals">
+          </div>
+          <div class="form-field">
+            <label for="program-tag">Tag (e.g. Education, Nutrition, Healthcare)</label>
+            <input type="text" id="program-tag" placeholder="e.g. Nutrition">
+          </div>
+          <div class="form-field">
+            <label for="program-order">Order (lower = shown first)</label>
+            <input type="number" id="program-order" value="99">
+          </div>
+          <div class="form-field">
+            <label for="program-excerpt">Short description</label>
+            <textarea id="program-excerpt" rows="2" placeholder="A few sentences for the program card..."></textarea>
+          </div>
+          <div class="form-field">
+            <label for="program-image">Image path (e.g. /images/community.jpg)</label>
+            <input type="text" id="program-image" placeholder="/images/community.jpg">
+          </div>
+          <div class="form-field">
+            <label for="program-body">Body (Markdown)</label>
+            <textarea id="program-body" rows="8" placeholder="Full details in Markdown..."></textarea>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-primary" type="button" id="program-save-btn">Save program</button>
+            <button class="btn btn-outline" type="button" id="program-cancel-btn">Cancel</button>
+            <button class="btn btn-danger" type="button" id="program-delete-btn" hidden>Delete</button>
+          </div>
+        </div>
       </div>
 
-      <div class="admin-section">
-        <h3>🎨 Site settings, donations & contact</h3>
-        <p style="font-size:0.95rem;">Everything (site name, navigation, donation links, contact details, impact stats) is editable in one place: <code>src/_data/site.json</code>. See the project <code>README.md</code> for how to change your Razorpay payment links and admin password.</p>
+      <div class="admin-section" role="tabpanel" id="tab-gallery" hidden>
+        <div class="tab-head">
+          <h3>🖼️ Gallery images</h3>
+          <button class="btn btn-primary" type="button" id="gallery-upload-btn">+ Upload image</button>
+        </div>
+        <p class="muted" style="font-size:0.88rem;">Uploaded photos are automatically resized and compressed (max 1600px, JPEG).</p>
+        <div id="gallery-upload" hidden>
+          <div class="form-field">
+            <label for="gallery-file">Choose a photo</label>
+            <input type="file" id="gallery-file" accept="image/*">
+          </div>
+          <div class="form-field">
+            <label for="gallery-caption">Caption (shown under the photo)</label>
+            <input type="text" id="gallery-caption" placeholder="e.g. Meal kit distribution at Green Park colony">
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-primary" type="button" id="gallery-upload-save-btn">Upload</button>
+            <button class="btn btn-outline" type="button" id="gallery-upload-cancel-btn">Cancel</button>
+          </div>
+        </div>
+        <div id="gallery-grid" class="admin-gallery" hidden></div>
+        <p class="muted" id="gallery-empty" hidden>No images yet. Upload your first photo above.</p>
       </div>
+
+      <p class="muted admin-foot">Changes are committed to your GitHub repository. The site rebuilds automatically within a minute.</p>
     </div>
   </div>
 </section>
 
-<script id="admin-config" type="application/json">{{ { passwordHash: site.admin.passwordHash } | dump | safe }}</script>
+<div id="admin-status" class="admin-status" role="status" aria-live="polite" hidden></div>
+
 <script src="/assets/js/admin.js" defer></script>

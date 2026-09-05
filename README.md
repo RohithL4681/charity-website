@@ -1,8 +1,9 @@
 # BrightHope Foundation — Charity Website
 
-A lightweight, fully static charity website. **No database, no backend, no in-site API.**
-Built with [Eleventy (11ty)](https://www.11ty.dev/), Nunjucks and plain CSS/JS.
-Host it anywhere for free (Netlify, Vercel, GitHub Pages, your own server).
+A lightweight charity website. **No database** — content is files in Git, published as
+a static site by [Eleventy (11ty)](https://www.11ty.dev/) (Nunjucks + plain CSS/JS),
+with tiny Vercel serverless functions for payments and the browser admin tool.
+Deploy free on Vercel; payouts handled by Razorpay.
 
 ---
 
@@ -10,11 +11,11 @@ Host it anywhere for free (Netlify, Vercel, GitHub Pages, your own server).
 
 | Need | How it is handled |
 |---|---|
-| Hosting | Vercel recommended (static output + tiny serverless functions for payments) |
+| Hosting | Vercel (static output + tiny serverless functions for payments & admin) |
 | Donations | Secure **inline Razorpay Checkout** — amount picked on the site, payment modal opens, acknowledgement shown on our thank-you page |
-| Admin | Hidden `/admin` page gated by a hashed password |
+| Admin | Full content manager at `/admin` — add/edit/delete news posts, programs & gallery images; changes commit to GitHub and the site rebuilds automatically |
 | Contact | `mailto:` form — opens the visitor's email app |
-| Images & content | Files on disk; drop an image in, it appears on the site |
+| Storage | Your GitHub repo (committed via API) — git is the source of truth, no database |
 | Design | Warm orange theme, mobile-first, responsive |
 
 ---
@@ -31,17 +32,52 @@ npm run build      # build the static site into _site/
 
 ## Editing content (the "admin" workflow)
 
-There is no database, so "publishing" = editing a file and rebuilding.
-The hidden admin page (`/admin`, password below) has copy-paste tools that
-produce the exact Markdown blocks you need.
+There is no database. The admin page at **`/admin`** lets you manage all content from
+the browser — it commits changes to your GitHub repo and Vercel **auto-rebuilds** the
+site within about a minute.
 
-### 1) Add a news post
-1. Go to `/admin`, sign in.
-2. Use the **Add a news post** tool to generate Markdown.
-3. Create `src/posts/<my-post-title>.md` with that content.
-4. Run `npm run deploy` (or `npm run build` and upload).
+What you can do at `/admin` after signing in:
 
-Alternatively write it by hand — any file in `src/posts/` is a post:
+| Tab | Capabilities |
+|---|---|
+| **News posts** | Create, edit, delete posts (title, date, excerpt, Markdown body) |
+| **Programs** | Create, edit, delete program pages (title, tag, order, excerpt, image, body) |
+| **Gallery** | Upload photos (auto-resized to 1600px JPEG), delete photos, edit captions |
+
+You can still edit files directly (`src/posts/`, `src/_programs/`,
+`src/images/gallery/`) and push — everything follows the same markdown format
+the admin tool writes.
+
+The admin manager needs three Vercel env vars on top of the payment keys:
+
+```
+GITHUB_REPO            # e.g. yourname/charity-website
+GITHUB_TOKEN           # Personal Access Token with repo contents read/write
+ADMIN_PASSWORD_HASH    # run: node tools/hash.js <your-password>
+```
+
+### Create a GitHub Personal Access Token
+1. github.com → **Settings → Developer settings → Personal access tokens → Tokens (classic)** → **Generate new token (classic)**
+2. Scope: tick **`repo`** (full control of private repositories) — or for a public repo, a
+   fine-grained token with **Contents: Read and write** on just this repository.
+3. Copy the token (shown once) into Vercel as `GITHUB_TOKEN`.
+
+### Set the admin password
+1. `node tools/hash.js <your-new-password>` → prints the SHA-256 hash
+2. Paste it into Vercel as `ADMIN_PASSWORD_HASH`
+3. Redeploy. The password itself is never stored — only its hash, and it stays in
+   Vercel (it is no longer shipped in the site files).
+
+> The `/admin` "hidden" URL plus the password gate protect the UI, but anyone who can
+> reach your admin API with the correct token hash can make changes. Keep your password
+> strong and your GitHub token limited to this repo.
+
+---
+
+## One-off content editing (still available)
+
+### Add a news post by hand
+Any file in `src/posts/` is a post:
 
 ```yaml
 ---
@@ -53,9 +89,8 @@ excerpt: One or two sentences shown on the news card.
 Your post body in **Markdown** here.
 ```
 
-### 2) Add a program
-Any file in `src/_programs/` becomes a program card (ordered by `order:`).
-Use the generator on `/admin`, or write:
+### Add a program by hand
+Any file in `src/_programs/` becomes a program card (ordered by `order:`):
 
 ```yaml
 ---
@@ -70,31 +105,9 @@ image: /images/community.jpg
 Full program details in Markdown.
 ```
 
-### 3) Add gallery images
-Copy any image (jpg/png/webp) into `src/images/gallery/` and rebuild.
-It appears in the gallery automatically. Optional captions live in
-`src/_data/gallery.js`.
-
-### 4) Replace hero / home photos
+### Replace hero / home photos
 - `src/images/hero.jpg` → homepage banner (1600×900 recommended)
 - `src/images/community.jpg` → home & about images
-
----
-
-## Setting the admin password
-
-Default password: `charity@2026`
-
-1. Generate a hash for your new password:
-   ```bash
-   node tools/hash.js MyNewStrongPassword
-   ```
-2. Paste the output into `src/_data/site.json` → `admin.passwordHash`
-3. Rebuild & redeploy. (The password itself is never stored — only its hash.)
-
-> Note: client-side hashing protects casual snooping but is not a substitute for a
-> real login system. Since the site is static, treat `/admin` as a convenience
-> content-helper, and keep the real shared password off-page.
 
 ---
 
@@ -157,19 +170,25 @@ Everything is editable in `src/_data/site.json`:
 - Site name, tagline, description, nav menu
 - Hero title/subtitle, impact stats
 - Color theme (`theme`)
-- Donation amounts, labels, links
+- Donation amounts, labels, limits
 - Contact email, phone, address, hours
 - Footer about text + social links
-- Admin password hash
+
+(Admin password hash and GitHub token live in Vercel env vars, not in this file.)
 
 ---
 
 ## Deploying
 
-### Vercel (recommended — required for online donations)
+### Vercel (recommended — required for donations & admin)
 The `vercel.json` already sets the build command and output directory, so it's a
-two-step process: import the repo, add your Razorpay env vars, deploy. See the
-[Wiring up Razorpay](#wiring-up-razorpay-donations-inline-checkout) section.
+two-step process: import the repo, add your env vars, deploy. Required env vars:
+
+- `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` — payments
+- `GITHUB_REPO`, `GITHUB_TOKEN`, `ADMIN_PASSWORD_HASH` — admin content manager
+
+See the [Wiring up Razorpay](#wiring-up-razorpay-donations-inline-checkout) and
+[Editing content](#editing-content-the-admin-workflow) sections.
 
 ```bash
 npm i -g vercel
@@ -177,9 +196,9 @@ vercel            # first deploy (follow the prompts)
 vercel --prod     # production deploy
 ```
 
-> **Why Vercel?** The inline payment flow needs two tiny serverless functions
-> (`api/create-order.js` and `api/verify-payment.js`). Plain static-only hosts
-> (e.g. GitHub Pages) can still preview/serve the site, but donations would fail.
+> **Why Vercel?** Both the payment flow and the admin manager use small serverless
+> functions (`api/*.js`). Plain static-only hosts (e.g. GitHub Pages) can still
+> preview/serve the site, but donations and admin editing would not work.
 
 ### Netlify
 Works for previewing, but serverless functions are Netlify-shaped (`netlify/functions`),
@@ -194,8 +213,11 @@ so the Razorpay flow would need small porting. Prefer Vercel.
 ├── package.json              # npm scripts (build / serve / deploy)
 ├── vercel.json               # Vercel build & static output settings
 ├── api/
-│   ├── create-order.js       # Vercel function: create Razorpay order (Key Secret lives in env)
-│   └── verify-payment.js     # Vercel function: verify Razorpay payment signature
+│   ├── _lib.js                # shared: GitHub API + admin-token auth helpers
+│   ├── create-order.js        # Vercel function: create Razorpay order (Key Secret lives in env)
+│   ├── verify-payment.js      # Vercel function: verify Razorpay payment signature
+│   ├── content.js             # Vercel function: CRUD for posts & programs (commits to GitHub)
+│   └── media.js               # Vercel function: gallery upload/delete/captions (commits to GitHub)
 ├── tools/hash.js             # generate an admin password hash
 └── src/
     ├── _data/
@@ -204,9 +226,9 @@ so the Razorpay flow would need small porting. Prefer Vercel.
     ├── _includes/            # base template, header, footer
     ├── _layouts/             # page + post layouts
     ├── _programs/            # program pages (one .md each)
-    ├── admin/                # hidden admin page
+    ├── admin/                # hidden admin page (content manager UI)
     ├── assets/css/styles.css # warm orange responsive theme
-    ├── assets/js/            # main.js (nav/lightbox), admin.js (gate/tools)
+    ├── assets/js/            # main.js (nav/lightbox), admin.js (content manager), donate.js (payments)
     ├── images/               # hero.jpg, community.jpg, gallery/*
     ├── posts/                # news posts (one .md each)
     ├── index.njk             # home page
@@ -220,9 +242,17 @@ so the Razorpay flow would need small porting. Prefer Vercel.
 
 ## FAQ / gotchas
 
-- **"Live" editing from a browser?** Not possible without a backend — that's the
-  trade-off for a mostly-static, DB-free site. Editing is: add/edit file → rebuild.
-  It's a one-command habit (`npm run deploy`).
+- **"Live" editing from a browser?** Yes — `/admin` edits commit to GitHub and Vercel
+  auto-redeploys. Allow ~1 minute after a change for the new build to go live. Use a
+  `?</param>` to force-refresh if you don't see it.
+- **Admin says "Could not reach the admin backend"?** `GITHUB_REPO`, `GITHUB_TOKEN` or
+  `ADMIN_PASSWORD_HASH` are missing/wrong in Vercel, or the repo/branch string is off.
+  Use the format `owner/name` and the default branch.
+- **Uploaded images failing / too big?** Photos are auto-resized to 1600px JPEG in the
+  browser before upload to stay under Vercel's function body limit. Huge photos may
+  still need shrinking first.
+- **GitHub rejects the write ("Not Found" / 404)?** The token must have `repo` scope, or
+  (fine-grained) `Contents: Read and write` on that exact repository.
 - **Where do payments actually happen?** In the Razorpay Checkout popup, processed by
   Razorpay's PCI-DSS compliant gateway. The site only creates the order and shows the
   acknowledgement.

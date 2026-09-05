@@ -65,9 +65,5 @@
       "twitter": "https://twitter.com/brighthope",
       "youtube": "https://youtube.com/@brighthope"
     }
-  },
-  "admin": {
-    "passwordHash": "4d8b2cef9077997a7bc962da24792468058a831991a78c22f7bc715ec39c8d0f",
-    "hint": "Default password is charity@2026. Change it by running: node tools/hash.js <your-new-password> and paste the result here."
   }
 }
