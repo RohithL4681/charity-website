@@ -1,6 +1,5 @@
 const captions = {
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
-  'diwali.jpg': 'Diwali celebration with children from our programs',
   'health-camp.jpg': 'Free medical check-up camp for senior citizens',
   'meal-drive.jpg': 'Meal kit distribution at Green Park colony',
   'sankalp.jpg': 'Graduation ceremony of our livelihood training batch',
