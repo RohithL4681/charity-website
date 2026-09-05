@@ -3,7 +3,7 @@ const captions = {
   'hash-tag-screen.jpg': 'Digital summit',
   'images-2.jpg': 'Plant a tree',
   'images-3.jpg': 'Happy weekend',
-  'images.jpg': 'Food donation',
+  'images.jpg': 'Food donation for childern',
 };
 
 module.exports = function () {
