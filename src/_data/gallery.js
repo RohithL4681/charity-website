@@ -1,5 +1,6 @@
 const captions = {
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself',
+  'images-3.jpg': 'Happy weekend',
 };
 
 module.exports = function () {
