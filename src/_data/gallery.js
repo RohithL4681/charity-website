@@ -7,6 +7,7 @@ const captions = {
   'images-2.jpg': 'Plant a trees',
   'images-3.jpg': 'Happy weekend Fun',
   'images.jpg': 'Food donation for childerns',
+  'rlokam1-work-anniversary-social-tile.jpg': 'star performer',
 };
 
 module.exports = function () {
