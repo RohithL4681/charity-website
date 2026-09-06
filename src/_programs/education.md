@@ -4,8 +4,9 @@ title: Education for Every Child
 tag: Education
 subtitle: Scholarships, school supplies and after-school support so no child has to drop out.
 excerpt: Scholarships, school supplies and after-school support so no child has to drop out.
-order: 99
+order: 2
 image: /images/gallery/images-2.jpg
+saved: 2026-09-06T19:41:33.134Z
 ---
 
 ## What we do
