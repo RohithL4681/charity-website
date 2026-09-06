@@ -5,7 +5,7 @@ tag: Education
 subtitle: Scholarships, school supplies and after-school support so no child has to drop out.
 excerpt: Scholarships, school supplies and after-school support so no child has to drop out.
 order: 1
-image: /images/community.jpg
+image: /images/gallery/images-2.jpg
 ---
 
 ## What we do

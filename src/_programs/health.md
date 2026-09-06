@@ -5,7 +5,7 @@ tag: Healthcare
 subtitle: Free check-ups, medicines, blood drives and health awareness for families who cannot afford regular care.
 excerpt: Free check-ups, medicines, blood drives and health awareness for families who cannot afford regular care.
 order: 3
-image: /images/community.jpg
+image: /images/gallery/hash-tag-screen.jpg
 ---
 
 ## What we do
