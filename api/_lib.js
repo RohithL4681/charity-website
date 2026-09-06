@@ -155,6 +155,10 @@ function todayISO() {
   return d.getFullYear() + '-' + m + '-' + day;
 }
 
+function nowIso() {
+  return new Date().toISOString();
+}
+
 module.exports = {
   json,
   readBody,
@@ -168,5 +172,6 @@ module.exports = {
   slugify,
   parseFrontMatter,
   todayISO,
+  nowIso,
   GH_API,
 };

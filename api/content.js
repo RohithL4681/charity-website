@@ -33,6 +33,7 @@ function buildFrontMatter(type, fields) {
     const order = Number.isNaN(rawOrder) ? 1 : Math.max(1, rawOrder);
     lines.push('order: ' + order);
     if (fields.image) lines.push('image: ' + String(fields.image).trim());
+    lines.push('saved: ' + lib.nowIso());
   }
   lines.push('---');
   return lines.join('\n');
@@ -79,13 +80,20 @@ module.exports = async (req, res) => {
             date: data.date || '',
             excerpt: data.excerpt || '',
             order: data.order || '',
+            saved: data.saved || '',
           });
         }
         if (type === 'programs') {
           items.sort(function (a, b) {
             var ao = parseInt(a.order, 10) || 100;
             var bo = parseInt(b.order, 10) || 100;
-            return ao - bo || a.title.localeCompare(b.title);
+            var as = a.saved ? String(a.saved) : '0';
+            var bs = b.saved ? String(b.saved) : '0';
+            return (
+              ao - bo ||
+              bs.localeCompare(as) ||
+              a.title.localeCompare(b.title)
+            );
           });
         } else {
           items.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title));

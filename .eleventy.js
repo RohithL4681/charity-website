@@ -20,6 +20,7 @@ module.exports = function (eleventyConfig) {
       .sort(function (a, b) {
         return (
           (Number(a.data.order) || 0) - (Number(b.data.order) || 0) ||
+          String(b.data.saved || '0').localeCompare(String(a.data.saved || '0')) ||
           String(a.data.title || '').localeCompare(String(b.data.title || ''))
         );
       });

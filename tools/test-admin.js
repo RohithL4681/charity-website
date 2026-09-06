@@ -251,6 +251,7 @@ async function run() {
     eq(text.includes('subtitle: Scholarships.'), true);
     eq(text.includes('order: 1'), true);
     eq(text.includes('image: /images/community.jpg'), true);
+    eq(text.includes('saved: '), true);
     eq(text.includes('Yearly scholarships.'), true);
   });
   await test('save program with order 0 persists as 1 (first place)', async () => {
@@ -261,6 +262,7 @@ async function run() {
     const text = store['src/_programs/zero-order.md'].toString('utf8');
     eq(text.includes('order: 1'), true);
     eq(text.includes('order: 99'), false);
+    eq(text.includes('saved: '), true);
   });
   await test('save program with no order defaults to 1', async () => {
     const r = await call(content, {
@@ -269,19 +271,23 @@ async function run() {
     eq(r.status, 200);
     const text = store['src/_programs/no-order.md'].toString('utf8');
     eq(text.includes('order: 1'), true);
+    eq(text.includes('saved: '), true);
   });
-  await test('list programs sorted by order then title', async () => {
+  await test('list programs sorted by order then saved (newest first)', async () => {
     const r = await call(content, { action: 'list', type: 'programs' }, VALID_TOKEN);
     eq(r.status, 200);
     eq(r.json.items.length, 5);
-    // all three order-1 programs, titles tied (order 1)
-    eq(r.json.items[0].title, 'Girls in STEM');
-    eq(r.json.items[1].title, 'No Order');
-    eq(r.json.items[2].title, 'Zero Order');
+    // all three order-1 programs, ties broken by most recently saved
+    eq(r.json.items[0].title, 'No Order');     // saved last
+    eq(r.json.items[1].title, 'Zero Order');   // saved before that
+    eq(r.json.items[2].title, 'Girls in STEM'); // saved first
     eq(r.json.items[3].title, 'Community Health Camps'); // order 2
     eq(r.json.items[4].title, 'Nutrition and Meal Kits'); // order 3
     eq(r.json.items[3].order, '2');
     eq(r.json.items[4].order, '3');
+    // every program carries its saved timestamp
+    eq(r.json.items[0].saved !== '', true);
+    eq(r.json.items[4].saved, '');
   });
   await test('delete post removes file', async () => {
     const r = await call(content, { action: 'delete', type: 'posts', path: 'src/posts/welcome.md' }, VALID_TOKEN);
