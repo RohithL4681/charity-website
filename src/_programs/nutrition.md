@@ -5,7 +5,7 @@ tag: Nutrition
 subtitle: Weekly meal kits and daily meals for families, children and the elderly who struggle to put food on the table.
 excerpt: Weekly meal kits and daily meals for families, children and the elderly who struggle to put food on the table.
 order: 2
-image: /images/community.jpg
+image: /images/gallery/images.jpg
 ---
 
 ## What we do
