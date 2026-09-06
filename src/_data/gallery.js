@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const captions = {
+  'chatgpt_image_aug_13_2026_09_54_02_am_20260907_013345.jpg': '',
   'chatgpt-image-aug-13-2026-01-16-35-pm.jpg': 'make it yourself Life of Life',
   'hash-tag-screen.jpg': 'Digital summit',
   'image.jpg': '',
