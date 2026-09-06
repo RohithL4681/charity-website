@@ -6,6 +6,9 @@ subtitle: Updates and impact stories from our work in the community.
 <div class="grid grid-2">
   {% for post in collections.posts %}
   <article class="card">
+    {% if post.data.image %}
+    <img class="card-image" src="{{ post.data.image }}" alt="{{ post.data.title }}" loading="lazy">
+    {% endif %}
     <div class="card-body">
       <p class="post-meta">{{ post.date | readableDate }}</p>
       <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>

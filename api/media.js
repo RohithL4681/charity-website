@@ -78,7 +78,10 @@ function safeImageName(input) {
   const base = String(input || '')
     .replace(/\.[^.]+$/, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/_+/g, '_')
     .replace(/^-+|-+$/g, '');
   return (base || 'image') + '.jpg';
 }

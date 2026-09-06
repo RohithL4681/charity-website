@@ -23,6 +23,7 @@ function buildFrontMatter(type, fields) {
     lines.push('title: ' + title);
     lines.push('date: ' + (String(fields.date || '').trim() || lib.todayISO()));
     if (fields.excerpt) lines.push('excerpt: ' + String(fields.excerpt).trim());
+    if (fields.image) lines.push('image: ' + String(fields.image).trim());
   } else {
     lines.push('title: ' + title);
     if (fields.tag) lines.push('tag: ' + String(fields.tag).trim());

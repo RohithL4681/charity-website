@@ -197,6 +197,14 @@ async function run() {
     const r = await call(content, { action: 'get', type: 'posts', path: 'src/_programs/health.md' }, VALID_TOKEN);
     eq(r.status, 400);
   });
+  await test('save post with image writes image front matter', async () => {
+    const r = await call(content, {
+      action: 'save', type: 'posts', title: 'Photo Post', date: '2026-09-02', excerpt: 'With a photo.', image: '/images/gallery/photo_20260902_100000.jpg', body: 'Body.',
+    }, VALID_TOKEN);
+    eq(r.status, 200);
+    const text = store['src/posts/photo-post.md'].toString('utf8');
+    eq(text.includes('image: /images/gallery/photo_20260902_100000.jpg'), true);
+  });
   await test('save new post writes markdown', async () => {
     const r = await call(content, {
       action: 'save', type: 'posts', title: 'Winter Clothing Drive!', date: '2026-09-01', excerpt: 'Warm coats.', body: 'Coat collection starts now.\n',
@@ -278,10 +286,10 @@ async function run() {
     const bytes = 'x'.repeat(500);
     const r = await call(media, { action: 'upload', filename: 'My Fun Pic.png', content: Buffer.from(bytes).toString('base64'), caption: 'Picnic!' }, VALID_TOKEN);
     eq(r.status, 200);
-    eq(r.json.name, 'my-fun-pic.jpg'); // sanitized to .jpg
-    eq(store['src/images/gallery/my-fun-pic.jpg'].toString('utf8').startsWith('x'), true);
+    eq(r.json.name, 'my_fun_pic.jpg'); // sanitized: spaces -> _, kept .jpg
+    eq(store['src/images/gallery/my_fun_pic.jpg'].toString('utf8').startsWith('x'), true);
     const gjs = store['src/_data/gallery.js'].toString('utf8');
-    eq(gjs.includes("'my-fun-pic.jpg': 'Picnic!'"), true);
+    eq(gjs.includes("'my_fun_pic.jpg': 'Picnic!'"), true);
   });
   await test('upload with no caption keeps gallery.js unchanged', async () => {
     const before = store['src/_data/gallery.js'].toString('utf8');
@@ -310,6 +318,11 @@ async function run() {
     const gjs = store['src/_data/gallery.js'].toString('utf8');
     eq(gjs.includes("'img1.jpg'"), false);
     eq(gjs.includes('Community day'), false);
+  });
+  await test('upload keeps underscores and timestamp in name', async () => {
+    const r = await call(media, { action: 'upload', filename: 'My Program 2026_0907_143022.jpg', content: Buffer.from('w'.repeat(300)).toString('base64') }, VALID_TOKEN);
+    eq(r.status, 200);
+    eq(r.json.name, 'my_program_2026_0907_143022.jpg');
   });
   await test('setCaption updates caption', async () => {
     const r = await call(media, { action: 'setCaption', filename: 'img2.png', caption: 'Riverside clean-up' }, VALID_TOKEN);

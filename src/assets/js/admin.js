@@ -37,6 +37,31 @@
     return d.getFullYear() + '-' + m + '-' + day;
   }
 
+  function timestamp() {
+    var d = new Date();
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    return (
+      d.getFullYear() +
+      p(d.getMonth() + 1) +
+      p(d.getDate()) +
+      '_' +
+      p(d.getHours()) +
+      p(d.getMinutes()) +
+      p(d.getSeconds())
+    );
+  }
+
+  function uniqueImageName(input) {
+    var base = String(input && input.name ? input.name : 'image.jpg')
+      .replace(/\.[^.]+$/, '')
+      .trim()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_]+/gi, '')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
+    return (base || 'image') + '_' + timestamp() + '.jpg';
+  }
+
   function setStatus(text, kind) {
     if (!statusEl) return;
     statusEl.textContent = text || '';
@@ -160,6 +185,8 @@
     title: document.getElementById('post-title'),
     date: document.getElementById('post-date'),
     excerpt: document.getElementById('post-excerpt'),
+    imageFile: document.getElementById('post-image-file'),
+    imageCurrent: document.getElementById('post-image-current'),
     body: document.getElementById('post-body'),
     container: document.getElementById('post-editor'),
     heading: document.getElementById('post-editor-title'),
@@ -174,6 +201,11 @@
     postEditor.title.value = entry ? entry.data.title : '';
     postEditor.date.value = entry ? entry.data.date : todayISO();
     postEditor.excerpt.value = entry ? entry.data.excerpt : '';
+    if (postEditor.imageFile) postEditor.imageFile.value = '';
+    if (postEditor.imageCurrent) {
+      postEditor.imageCurrent.textContent = entry && entry.data.image ? 'Current image: ' + entry.data.image : '';
+      postEditor.imageCurrent.hidden = !(entry && entry.data.image);
+    }
     postEditor.body.value = entry ? entry.data.body : '';
     postEditor.deleteBtn.hidden = !entry;
     postEditor.container.hidden = false;
@@ -186,12 +218,40 @@
   }
 
   async function savePost() {
+    var fileInput = postEditor.imageFile;
+    var uploaded = '';
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      setStatus('Uploading image…', 'ok');
+      try {
+        var resized = await resizeImage(fileInput.files[0]);
+        resized.name = uniqueImageName(fileInput.files[0]);
+        var media = await api('/api/media', {
+          action: 'upload',
+          filename: resized.name,
+          content: resized.base64,
+          caption: '',
+        });
+        uploaded = '/images/gallery/' + media.name;
+      } catch (e) {
+        setStatus(e.message || 'Image upload failed.', 'error');
+        return;
+      }
+    } else if (postEditor.path && postEditor.imageCurrent && postEditor.imageCurrent.textContent) {
+      uploaded = postEditor.imageCurrent.textContent.replace(/^Current image:\s*/, '');
+    }
+
+    if (!uploaded) {
+      setStatus('Please upload a post image.', 'error');
+      return;
+    }
+
     var payload = {
       action: 'save',
       type: 'posts',
       title: postEditor.title.value,
       date: postEditor.date.value,
       excerpt: postEditor.excerpt.value,
+      image: uploaded,
       body: postEditor.body.value,
     };
     if (postEditor.path) payload.path = postEditor.path;
@@ -294,8 +354,8 @@
     tag: document.getElementById('program-tag'),
     order: document.getElementById('program-order'),
     excerpt: document.getElementById('program-excerpt'),
-    image: document.getElementById('program-image'),
     imageFile: document.getElementById('program-image-file'),
+    imageCurrent: document.getElementById('program-image-current'),
     body: document.getElementById('program-body'),
     container: document.getElementById('program-editor'),
     heading: document.getElementById('program-editor-title'),
@@ -312,8 +372,11 @@
     programEditor.tag.value = d.tag || '';
     programEditor.order.value = d.order || 99;
     programEditor.excerpt.value = d.excerpt || '';
-    programEditor.image.value = d.image || '';
     if (programEditor.imageFile) programEditor.imageFile.value = '';
+    if (programEditor.imageCurrent) {
+      programEditor.imageCurrent.textContent = entry && d.image ? 'Current image: ' + d.image : '';
+      programEditor.imageCurrent.hidden = !(entry && d.image);
+    }
     programEditor.body.value = d.body || '';
     programEditor.deleteBtn.hidden = !entry;
     programEditor.container.hidden = false;
@@ -327,11 +390,12 @@
 
   async function saveProgram() {
     var fileInput = programEditor.imageFile;
-    var uploaded = null;
+    var uploaded = '';
     if (fileInput && fileInput.files && fileInput.files[0]) {
       setStatus('Uploading image…', 'ok');
       try {
         var resized = await resizeImage(fileInput.files[0]);
+        resized.name = uniqueImageName(fileInput.files[0]);
         var media = await api('/api/media', {
           action: 'upload',
           filename: resized.name,
@@ -343,11 +407,12 @@
         setStatus(e.message || 'Image upload failed.', 'error');
         return;
       }
+    } else if (programEditor.path && programEditor.imageCurrent && programEditor.imageCurrent.textContent) {
+      uploaded = programEditor.imageCurrent.textContent.replace(/^Current image:\s*/, '');
     }
 
-    var link = String(programEditor.image.value || '').trim();
-    if (!uploaded && !link) {
-      setStatus('Add an image: upload a file or paste an image path/link.', 'error');
+    if (!uploaded) {
+      setStatus('Please upload a program image.', 'error');
       return;
     }
 
@@ -358,14 +423,13 @@
       tag: programEditor.tag.value,
       order: programEditor.order.value,
       excerpt: programEditor.excerpt.value,
-      image: uploaded ? uploaded : link,
+      image: uploaded,
       body: programEditor.body.value,
     };
     if (programEditor.path) payload.path = programEditor.path;
     programEditor.saveBtn.disabled = true;
     try {
       var r = await api('/api/content', payload);
-      if (uploaded) programEditor.image.value = ''; // uploaded image wins; clear the link
       setStatus(r.created ? 'Program created — site is updating.' : 'Program updated — site is updating.', 'ok');
       closeProgramEditor();
     } catch (e) {
@@ -474,6 +538,7 @@
     btn.disabled = true;
     try {
       var resized = await resizeImage(fileInput.files[0]);
+      resized.name = uniqueImageName(fileInput.files[0]);
       var data = await api('/api/media', {
         action: 'upload',
         filename: resized.name,

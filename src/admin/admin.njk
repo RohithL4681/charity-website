@@ -54,6 +54,12 @@ pageDescription: Content management area for BrightHope Foundation.
             <input type="text" id="post-excerpt" placeholder="One or two sentences...">
           </div>
           <div class="form-field">
+            <label for="post-image-file">Upload post image * (max 3 MB)</label>
+            <input type="file" id="post-image-file" accept="image/*">
+            <p class="muted" style="font-size:0.85rem; margin:0.3rem 0 0;">Auto-resized to 1600px JPEG. Filenames are made unique automatically so images never overwrite each other.</p>
+            <p class="muted" id="post-image-current" style="font-size:0.85rem; margin:0.3rem 0 0;" hidden></p>
+          </div>
+          <div class="form-field">
             <label for="post-body">Body (Markdown)</label>
             <textarea id="post-body" rows="10" placeholder="Write your post content in Markdown..."></textarea>
           </div>
@@ -92,13 +98,10 @@ pageDescription: Content management area for BrightHope Foundation.
             <textarea id="program-excerpt" rows="2" placeholder="A few sentences for the program card..."></textarea>
           </div>
           <div class="form-field">
-            <label for="program-image-file">Upload program image (optional, max 3 MB)</label>
+            <label for="program-image-file">Upload program image * (max 3 MB)</label>
             <input type="file" id="program-image-file" accept="image/*">
-            <p class="muted" style="font-size:0.85rem; margin:0.3rem 0 0;">Photos are auto-resized to 1600px JPEG. Provide an upload or a link below — an uploaded image is used if both are set.</p>
-          </div>
-          <div class="form-field">
-            <label for="program-image">…or paste an image path / link</label>
-            <input type="text" id="program-image" placeholder="/images/community.jpg or https://...">
+            <p class="muted" style="font-size:0.85rem; margin:0.3rem 0 0;">Auto-resized to 1600px JPEG. Filenames are made unique automatically so images never overwrite each other.</p>
+            <p class="muted" id="program-image-current" style="font-size:0.85rem; margin:0.3rem 0 0;" hidden></p>
           </div>
           <div class="form-field">
             <label for="program-body">Body (Markdown)</label>

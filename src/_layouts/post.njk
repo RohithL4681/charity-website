@@ -9,6 +9,7 @@ layout: base.njk
 </header>
 <article class="section">
   <div class="container post-content">
+    {% if image %}<img class="card-image" src="{{ image }}" alt="{{ title }}" style="border-radius: var(--radius); margin: 0 0 1.5rem;">{% endif %}
     {{ content | safe }}
   </div>
 </article>
