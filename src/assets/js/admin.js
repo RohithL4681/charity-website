@@ -295,6 +295,7 @@
     order: document.getElementById('program-order'),
     excerpt: document.getElementById('program-excerpt'),
     image: document.getElementById('program-image'),
+    imageFile: document.getElementById('program-image-file'),
     body: document.getElementById('program-body'),
     container: document.getElementById('program-editor'),
     heading: document.getElementById('program-editor-title'),
@@ -312,6 +313,7 @@
     programEditor.order.value = d.order || 99;
     programEditor.excerpt.value = d.excerpt || '';
     programEditor.image.value = d.image || '';
+    if (programEditor.imageFile) programEditor.imageFile.value = '';
     programEditor.body.value = d.body || '';
     programEditor.deleteBtn.hidden = !entry;
     programEditor.container.hidden = false;
@@ -324,6 +326,31 @@
   }
 
   async function saveProgram() {
+    var fileInput = programEditor.imageFile;
+    var uploaded = null;
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      setStatus('Uploading image…', 'ok');
+      try {
+        var resized = await resizeImage(fileInput.files[0]);
+        var media = await api('/api/media', {
+          action: 'upload',
+          filename: resized.name,
+          content: resized.base64,
+          caption: '',
+        });
+        uploaded = '/images/gallery/' + media.name;
+      } catch (e) {
+        setStatus(e.message || 'Image upload failed.', 'error');
+        return;
+      }
+    }
+
+    var link = String(programEditor.image.value || '').trim();
+    if (!uploaded && !link) {
+      setStatus('Add an image: upload a file or paste an image path/link.', 'error');
+      return;
+    }
+
     var payload = {
       action: 'save',
       type: 'programs',
@@ -331,13 +358,14 @@
       tag: programEditor.tag.value,
       order: programEditor.order.value,
       excerpt: programEditor.excerpt.value,
-      image: programEditor.image.value,
+      image: uploaded ? uploaded : link,
       body: programEditor.body.value,
     };
     if (programEditor.path) payload.path = programEditor.path;
     programEditor.saveBtn.disabled = true;
     try {
       var r = await api('/api/content', payload);
+      if (uploaded) programEditor.image.value = ''; // uploaded image wins; clear the link
       setStatus(r.created ? 'Program created — site is updating.' : 'Program updated — site is updating.', 'ok');
       closeProgramEditor();
     } catch (e) {
