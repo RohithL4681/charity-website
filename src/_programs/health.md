@@ -4,7 +4,7 @@ title: Community Health Camps
 tag: Healthcare
 subtitle: Free check-ups, medicines, blood drives and health awareness for families who cannot afford regular care.
 excerpt: Free check-ups, medicines, blood drives and health awareness for families who cannot afford regular care.
-order: 3
+order: 70
 image: /images/gallery/hash-tag-screen.jpg
 ---
 
