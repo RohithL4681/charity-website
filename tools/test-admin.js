@@ -317,6 +317,21 @@ async function run() {
     const gjs = store['src/_data/gallery.js'].toString('utf8');
     eq(gjs.includes("'img2.png': 'Riverside clean-up'"), true);
   });
+  await test('setCaption preserves lines before captions block', async () => {
+    store['src/_data/gallery.js'] = Buffer.from(
+      'const fs = require(\'fs\');\nconst path = require(\'path\');\n\nconst dir = path.join(__dirname, "x");\nconst images = fs.readdirSync(dir).sort();\n\nconst captions = {\n  \'keep1.jpg\': \'A\',\n};\n\nmodule.exports = images.map((n) => n);\n'
+    );
+    shas['src/_data/gallery.js'] = computeSha();
+    const before = store['src/_data/gallery.js'].toString('utf8');
+    const r = await call(media, { action: 'setCaption', filename: 'nope.jpg', caption: 'New' }, VALID_TOKEN);
+    eq(r.status, 200);
+    const after = store['src/_data/gallery.js'].toString('utf8');
+    eq(after.startsWith("const fs = require('fs');\nconst path = require('path');\n"), true, 'require lines kept at top');
+    eq(after.includes("const dir = path.join(__dirname"), true, 'preamble code kept');
+    eq(after.includes("module.exports = images.map((n) => n);"), true, 'trailing exports kept');
+    eq(after.includes("'nope.jpg': 'New'"), true, 'new caption added');
+    eq(after.length > before.length, true);
+  });
   await test('setCaption rejects pathlike name', async () => {
     const r = await call(media, { action: 'setCaption', filename: '../evil.png', caption: 'x' }, VALID_TOKEN);
     eq(r.status, 400);

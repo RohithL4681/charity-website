@@ -49,8 +49,11 @@ function buildCaptions(raw, map) {
 
   if (parsed.start !== -1 && parsed.end !== -1) {
     const head = parsed.lines[parsed.start].replace(/\s*\{.*$/, '') + ' {';
+    const pre = parsed.lines.slice(0, parsed.start).join('\n');
+    const block = head + '\n' + entries.join('\n') + '\n};';
     const rest = parsed.lines.slice(parsed.end + 1).join('\n');
-    return head + '\n' + entries.join('\n') + '\n};' + (rest ? '\n' + rest : '');
+    const out = pre + '\n' + block + (rest ? '\n' + rest : '');
+    return out.replace(/\n{3,}/g, '\n\n');
   }
 
   // No captions object found — insert before the first module.exports.
