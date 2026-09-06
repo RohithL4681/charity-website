@@ -47,7 +47,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.amendLibrary('md', function (mdLib) {
     mdLib.set({
       html: true,
+      breaks: true,
+      linkify: true,
     });
+    mdLib.enable('linkify');
   });
 
   return {

@@ -60,8 +60,24 @@ pageDescription: Content management area for BrightHope Foundation.
             <p class="muted" id="post-image-current" style="font-size:0.85rem; margin:0.3rem 0 0;" hidden></p>
           </div>
           <div class="form-field">
-            <label for="post-body">Body (Markdown)</label>
-            <textarea id="post-body" rows="10" placeholder="Write your post content in Markdown..."></textarea>
+            <label for="post-body">Body</label>
+            <div class="md-editor">
+              <div class="md-toolbar" role="toolbar" aria-label="Formatting">
+                <button type="button" class="md-btn" data-action="bold" title="Bold">B</button>
+                <button type="button" class="md-btn" data-action="italic" title="Italic"><em>I</em></button>
+                <button type="button" class="md-btn" data-action="heading" title="Heading">H</button>
+                <span class="md-sep" aria-hidden="true"></span>
+                <button type="button" class="md-btn" data-action="bullets" title="Bullet list">• List</button>
+                <button type="button" class="md-btn" data-action="numbers" title="Numbered list">1. List</button>
+                <button type="button" class="md-btn" data-action="quote" title="Quote">&ldquo;</button>
+                <span class="md-sep" aria-hidden="true"></span>
+                <button type="button" class="md-btn" data-action="link" title="Link">🔗</button>
+                <button type="button" class="md-btn md-toggle" data-action="preview" title="Show preview">👁 Preview</button>
+              </div>
+              <textarea id="post-body" rows="10" placeholder="Start typing… use the buttons above, or just type plain text."></textarea>
+              <div class="md-preview" id="post-preview" hidden></div>
+            </div>
+            <p class="muted" style="font-size:0.85rem; margin:0.3rem 0 0;">Tip: select text and use the buttons, or just type plain text — links and line breaks are added automatically.</p>
           </div>
           <div class="editor-actions">
             <button class="btn btn-primary" type="button" id="post-save-btn">Save post</button>
@@ -105,8 +121,24 @@ pageDescription: Content management area for BrightHope Foundation.
             <p class="muted" id="program-image-current" style="font-size:0.85rem; margin:0.3rem 0 0;" hidden></p>
           </div>
           <div class="form-field">
-            <label for="program-body">Body (Markdown)</label>
-            <textarea id="program-body" rows="8" placeholder="Full details in Markdown..."></textarea>
+            <label for="program-body">Body</label>
+            <div class="md-editor">
+              <div class="md-toolbar" role="toolbar" aria-label="Formatting">
+                <button type="button" class="md-btn" data-action="bold" title="Bold">B</button>
+                <button type="button" class="md-btn" data-action="italic" title="Italic"><em>I</em></button>
+                <button type="button" class="md-btn" data-action="heading" title="Heading">H</button>
+                <span class="md-sep" aria-hidden="true"></span>
+                <button type="button" class="md-btn" data-action="bullets" title="Bullet list">• List</button>
+                <button type="button" class="md-btn" data-action="numbers" title="Numbered list">1. List</button>
+                <button type="button" class="md-btn" data-action="quote" title="Quote">&ldquo;</button>
+                <span class="md-sep" aria-hidden="true"></span>
+                <button type="button" class="md-btn" data-action="link" title="Link">🔗</button>
+                <button type="button" class="md-btn md-toggle" data-action="preview" title="Show preview">👁 Preview</button>
+              </div>
+              <textarea id="program-body" rows="8" placeholder="Start typing… use the buttons above, or just type plain text."></textarea>
+              <div class="md-preview" id="program-preview" hidden></div>
+            </div>
+            <p class="muted" style="font-size:0.85rem; margin:0.3rem 0 0;">Tip: select text and use the buttons, or just type plain text — links and line breaks are added automatically.</p>
           </div>
           <div class="editor-actions">
             <button class="btn btn-primary" type="button" id="program-save-btn">Save program</button>
@@ -147,4 +179,5 @@ pageDescription: Content management area for BrightHope Foundation.
 
 <div id="admin-status" class="admin-status" role="status" aria-live="polite" hidden></div>
 
-<script src="/assets/js/admin.js?v=2" defer></script>
+<script src="/assets/js/vendor/marked.min.js" defer></script>
+<script src="/assets/js/admin.js?v=3" defer></script>

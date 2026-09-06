@@ -210,6 +210,7 @@
     postEditor.deleteBtn.hidden = !entry;
     postEditor.container.hidden = false;
     postEditor.title.focus();
+    refreshMdPreview('post-body');
   }
 
   function closePostEditor() {
@@ -381,6 +382,7 @@
     programEditor.deleteBtn.hidden = !entry;
     programEditor.container.hidden = false;
     programEditor.title.focus();
+    refreshMdPreview('program-body');
   }
 
   function closeProgramEditor() {
@@ -675,6 +677,123 @@
       if (target) handler(target);
     });
   }
+
+  /* ---------- markdown-friendly body editor ---------- */
+
+  var mdPreviews = {};
+
+  function renderPreview(el, value) {
+    if (!el) return;
+    if (typeof marked !== 'undefined' && marked.parse) {
+      el.innerHTML = marked.parse(value || '', { breaks: true, gfm: true });
+    } else {
+      el.innerHTML = '';
+      var pre = document.createElement('pre');
+      pre.textContent = value || '';
+      el.appendChild(pre);
+    }
+  }
+
+  function refreshMdPreview(taId) {
+    var el = mdPreviews[taId];
+    if (!el || el.hidden) return;
+    var ta = document.getElementById(taId);
+    renderPreview(el, ta ? ta.value : '');
+  }
+
+  function wrapWith(ta, before, after, placeholder) {
+    var start = ta.selectionStart;
+    var end = ta.selectionEnd;
+    var value = ta.value;
+    var sel = value.slice(start, end) || placeholder;
+    ta.value = value.slice(0, start) + before + sel + after + value.slice(end);
+    var pos = start + before.length;
+    ta.selectionStart = pos;
+    ta.selectionEnd = pos + sel.length;
+    ta.focus();
+  }
+
+  function prefixLines(ta, prefix) {
+    var start = ta.selectionStart;
+    var end = ta.selectionEnd;
+    var value = ta.value;
+    var startLine = value.lastIndexOf('\n', start - 1) + 1;
+    var nl = value.indexOf('\n', end);
+    var endLine = nl === -1 ? value.length : nl;
+    var block = value.slice(startLine, endLine);
+    var lines = block.split('\n');
+    var filled = lines.filter(function (l) { return l.trim() !== ''; });
+    var active = filled.length > 0 && filled.every(function (l) { return l.indexOf(prefix) === 0; });
+    var out = lines.map(function (l) {
+      if (l.trim() === '') return l;
+      if (active) return l.indexOf(prefix) === 0 ? l.slice(prefix.length) : l;
+      return prefix + l;
+    }).join('\n');
+    ta.value = value.slice(0, startLine) + out + value.slice(endLine);
+    ta.selectionStart = startLine;
+    ta.selectionEnd = startLine + out.length;
+    ta.focus();
+  }
+
+  function toggleHeading(ta) {
+    var start = ta.selectionStart;
+    var value = ta.value;
+    var lineStart = value.lastIndexOf('\n', start - 1) + 1;
+    var nl = value.indexOf('\n', lineStart);
+    var lineEnd = nl === -1 ? value.length : nl;
+    var line = value.slice(lineStart, lineEnd);
+    var hash = '## ';
+    var on = line.indexOf(hash) === 0;
+    var newLine = on ? line.slice(hash.length) : hash + line;
+    ta.value = value.slice(0, lineStart) + newLine + value.slice(lineEnd);
+    ta.selectionStart = lineStart;
+    ta.selectionEnd = lineStart + newLine.length;
+    ta.focus();
+  }
+
+  function applyFormat(ta, action, preview) {
+    if (action === 'preview') {
+      if (!preview) return;
+      preview.hidden = !preview.hidden;
+      if (!preview.hidden) renderPreview(preview, ta.value);
+      return;
+    }
+    if (action === 'bold') return wrapWith(ta, '**', '**', 'bold text');
+    if (action === 'italic') return wrapWith(ta, '_', '_', 'italic text');
+    if (action === 'link') return wrapWith(ta, '[', '](https://)', 'link text');
+    if (action === 'heading') return toggleHeading(ta);
+    if (action === 'bullets') return prefixLines(ta, '- ');
+    if (action === 'numbers') return prefixLines(ta, '1. ');
+    if (action === 'quote') return prefixLines(ta, '> ');
+  }
+
+  function initMarkdownEditor(taId) {
+    var ta = document.getElementById(taId);
+    if (!ta) return;
+    var editor = ta.closest('.md-editor');
+    var toolbar = editor ? editor.querySelector('.md-toolbar') : null;
+    var preview = editor ? editor.querySelector('.md-preview') : null;
+    if (!editor || !toolbar) return;
+    if (preview) mdPreviews[taId] = preview;
+
+    toolbar.addEventListener('click', function (e) {
+      var btn = e.target.closest('.md-btn');
+      if (!btn) return;
+      e.preventDefault();
+      applyFormat(ta, btn.dataset.action, preview);
+    });
+
+    var timer = null;
+    ta.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        if (preview && !preview.hidden) renderPreview(preview, ta.value);
+      }, 200);
+    });
+  }
+
+  initMarkdownEditor('post-body');
+  initMarkdownEditor('program-body');
 
   switchTab('news');
 })();
