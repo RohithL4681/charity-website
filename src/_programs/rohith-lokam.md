@@ -4,7 +4,7 @@ title: Rohith Lokam
 tag: Education
 subtitle: testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose
 excerpt: testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose testing purpose
-order: 2
+order: 99
 image: /images/gallery/image.jpg
 ---
 
