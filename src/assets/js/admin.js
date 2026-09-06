@@ -142,6 +142,8 @@
     document.getElementById('tab-news').hidden = name !== 'news';
     document.getElementById('tab-programs').hidden = name !== 'programs';
     document.getElementById('tab-gallery').hidden = name !== 'gallery';
+    if (name === 'news') loadPosts();
+    if (name === 'programs') loadPrograms();
     if (name === 'gallery') loadGallery();
   }
 
