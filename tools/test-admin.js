@@ -205,7 +205,7 @@ async function run() {
     const text = store['src/posts/photo-post.md'].toString('utf8');
     eq(text.includes('image: /images/gallery/photo_20260902_100000.jpg'), true);
   });
-  await test('save new post writes markdown', async () => {
+  await test('save new News post writes markdown', async () => {
     const r = await call(content, {
       action: 'save', type: 'posts', title: 'Winter Clothing Drive!', date: '2026-09-01', excerpt: 'Warm coats.', body: 'Coat collection starts now.\n',
     }, VALID_TOKEN);

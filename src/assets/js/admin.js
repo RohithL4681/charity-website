@@ -197,7 +197,7 @@
 
   function openPostEditor(entry) {
     postEditor.path = entry ? entry.path : null;
-    postEditor.heading.textContent = entry ? 'Edit post' : 'New post';
+    postEditor.heading.textContent = entry ? 'Edit post' : 'New News post';
     postEditor.title.value = entry ? entry.data.title : '';
     postEditor.date.value = entry ? entry.data.date : todayISO();
     postEditor.excerpt.value = entry ? entry.data.excerpt : '';
@@ -292,7 +292,7 @@
     try {
       var data = await api('/api/content', { action: 'list', type: 'posts' });
       if (!data.items.length) {
-        list.innerHTML = '<p class="muted">No posts yet. Click “+ New post” to create one.</p>';
+        list.innerHTML = '<p class="muted">No posts yet. Click “+ New News post” to create one.</p>';
         return;
       }
       list.innerHTML = '';
