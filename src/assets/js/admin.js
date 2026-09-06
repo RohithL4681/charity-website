@@ -370,7 +370,7 @@
     programEditor.heading.textContent = entry ? 'Edit program' : 'New program';
     programEditor.title.value = d.title || '';
     programEditor.tag.value = d.tag || '';
-    programEditor.order.value = d.order || 99;
+    programEditor.order.value = (d.order !== undefined && d.order !== '') ? d.order : 1;
     programEditor.excerpt.value = d.excerpt || '';
     if (programEditor.imageFile) programEditor.imageFile.value = '';
     if (programEditor.imageCurrent) {
@@ -474,7 +474,9 @@
         var title = document.createElement('strong');
         title.textContent = item.title;
         var meta = document.createElement('span');
-        meta.textContent = item.excerpt || '';
+        meta.textContent =
+          (item.order !== undefined && item.order !== '' ? 'Position: ' + item.order + ' · ' : '') +
+          (item.excerpt || '');
         info.appendChild(title);
         info.appendChild(meta);
         var actions = document.createElement('div');

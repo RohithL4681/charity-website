@@ -29,7 +29,9 @@ function buildFrontMatter(type, fields) {
     if (fields.tag) lines.push('tag: ' + String(fields.tag).trim());
     lines.push('subtitle: ' + String(fields.excerpt || '').trim());
     lines.push('excerpt: ' + String(fields.excerpt || '').trim());
-    lines.push('order: ' + String(parseInt(fields.order, 10) || 99));
+    const rawOrder = parseInt(fields.order, 10);
+    const order = Number.isNaN(rawOrder) ? 1 : Math.max(1, rawOrder);
+    lines.push('order: ' + order);
     if (fields.image) lines.push('image: ' + String(fields.image).trim());
   }
   lines.push('---');
@@ -76,9 +78,18 @@ module.exports = async (req, res) => {
             title: data.title || f.name.replace(/\.md$/, ''),
             date: data.date || '',
             excerpt: data.excerpt || '',
+            order: data.order || '',
           });
         }
-        items.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title));
+        if (type === 'programs') {
+          items.sort(function (a, b) {
+            var ao = parseInt(a.order, 10) || 100;
+            var bo = parseInt(b.order, 10) || 100;
+            return ao - bo || a.title.localeCompare(b.title);
+          });
+        } else {
+          items.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.title.localeCompare(b.title));
+        }
         return lib.json(res, 200, { items: items });
       }
 

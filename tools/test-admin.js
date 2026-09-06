@@ -253,6 +253,36 @@ async function run() {
     eq(text.includes('image: /images/community.jpg'), true);
     eq(text.includes('Yearly scholarships.'), true);
   });
+  await test('save program with order 0 persists as 1 (first place)', async () => {
+    const r = await call(content, {
+      action: 'save', type: 'programs', title: 'Zero Order', tag: 'X', order: '0', excerpt: 'Z.', body: 'z',
+    }, VALID_TOKEN);
+    eq(r.status, 200);
+    const text = store['src/_programs/zero-order.md'].toString('utf8');
+    eq(text.includes('order: 1'), true);
+    eq(text.includes('order: 99'), false);
+  });
+  await test('save program with no order defaults to 1', async () => {
+    const r = await call(content, {
+      action: 'save', type: 'programs', title: 'No Order', tag: 'X', excerpt: 'N.', body: 'n',
+    }, VALID_TOKEN);
+    eq(r.status, 200);
+    const text = store['src/_programs/no-order.md'].toString('utf8');
+    eq(text.includes('order: 1'), true);
+  });
+  await test('list programs sorted by order then title', async () => {
+    const r = await call(content, { action: 'list', type: 'programs' }, VALID_TOKEN);
+    eq(r.status, 200);
+    eq(r.json.items.length, 5);
+    // all three order-1 programs, titles tied (order 1)
+    eq(r.json.items[0].title, 'Girls in STEM');
+    eq(r.json.items[1].title, 'No Order');
+    eq(r.json.items[2].title, 'Zero Order');
+    eq(r.json.items[3].title, 'Community Health Camps'); // order 2
+    eq(r.json.items[4].title, 'Nutrition and Meal Kits'); // order 3
+    eq(r.json.items[3].order, '2');
+    eq(r.json.items[4].order, '3');
+  });
   await test('delete post removes file', async () => {
     const r = await call(content, { action: 'delete', type: 'posts', path: 'src/posts/welcome.md' }, VALID_TOKEN);
     eq(r.status, 200);

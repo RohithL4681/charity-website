@@ -18,7 +18,10 @@ module.exports = function (eleventyConfig) {
     return collectionApi
       .getFilteredByGlob('src/_programs/*.md')
       .sort(function (a, b) {
-        return a.data.order - b.data.order;
+        return (
+          (Number(a.data.order) || 0) - (Number(b.data.order) || 0) ||
+          String(a.data.title || '').localeCompare(String(b.data.title || ''))
+        );
       });
   });
 
